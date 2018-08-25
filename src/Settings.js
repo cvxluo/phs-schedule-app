@@ -12,7 +12,7 @@ class Settings extends Component {
   render() {
     return (
       <View>
-          <Text> pls work </Text>
+        <Text> This app works by logging into Powerschool with your username and password in order to retrieve your classes. </Text>
       </View>
     );
   }

@@ -1,13 +1,29 @@
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 
-import { Input } from 'react-native-elements';
+import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
 import infoSubmit from './sync';
 import Nav from './Navigator';
 
-export default class Login extends Component {
+{/* ref={input => this.input = input}
+possibily to blur/focus the inputs
+*/}
+
+
+class Login extends Component {
+
+  submit(username, password) {
+    const schedule = infoSubmit(username, password);
+    this.props.navigation.navigate('Schedule', {
+      username: username,
+      password: password,
+      schedule : schedule,
+    })
+  }
+
+
   constructor() {
     super();
     this.state = {
@@ -19,26 +35,37 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Input
-          placeholder='Powerschool Username'
-          onChangeText={(text) => this.setState({username})}
+      <View style={styles.form}>
+        <Image source={require('../assets/princeton_logo.jpg')} />
+
+        <FormLabel labelStyle={styles.fLabelText}>Login to get your classes!</FormLabel>
+
+        <FormInput
+          autocorrect = {false}
+          placeholder='Powerschool Login'
+          inputStyle={{
+            maxWidth: '90%',
+          }}
+          onChangeText={(text) => this.setState({username : text})}
         />
-        <Input
+
+        <FormInput
+          autocorrect = {false}
           placeholder='Powerschool Password'
-          onChangeText={(text) => this.setState({password})}
+          inputStyle={{
+            maxWidth: '90%',
+          }}
+          onChangeText={(text) => this.setState({password : text})}
         />
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
+
+        {/* <FormValidationMessage>Error message</FormValidationMessage> */}
+
         <Button
-          transparent
+          title='Submit'
+          loading= {this.state.loading}
           onPress={() => {
             this.state.loading = true;
-            const schedule = infoSubmit(this.state.username, this.state.password);
-            this.props.navigation.navigate('Schedule', {
-              username: this.state.username,
-              password: this.state.password,
-              schedule : schedule,
-            })
+            this.submit(this.state.username, this.state.password);
           }}
         />
       </View>
@@ -46,16 +73,19 @@ export default class Login extends Component {
   }
 }
 
+export default Login;
+
 const styles = StyleSheet.create({
-  container: {
+  form: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    padding: '10%',
+    backgroundColor: '#FFFFFF',
   },
-  text: {
-    fontSize: 20,
+  fLabelText: {
+    fontSize: 30,
     textAlign: 'center',
-    margin: 10,
   },
 });

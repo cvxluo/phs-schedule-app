@@ -1,5 +1,5 @@
 
-export default infoSubmit(user, pass) {
+function infoSubmit(user, pass) {
   fetch('https://phs-schedule-server.herokuapp.com/getSchedule', {
     method: 'POST',
     headers: {
@@ -20,3 +20,5 @@ export default infoSubmit(user, pass) {
     console.error(error);
   });
 }
+
+export default infoSubmit;
