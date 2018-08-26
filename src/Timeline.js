@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
-import { StatusBar, RefreshControl, ActivityIndicator } from "react-native";
+import { StatusBar, RefreshControl, ActivityIndicator, Text } from "react-native";
 import Timeline from 'react-native-timeline-listview'
 import infoSubmit from './sync'
 
 
-export default class TimelineScreen extends Component {
+class TimelineScreen extends Component {
 
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.onEndReached = this.onEndReached.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onRefresh = this.onRefresh.bind(this)
+
+    const { navigation } = this.props;
 
     const username = navigation.getParam('username', 'DummyUsername');
     const password = navigation.getParam('password', 'DummyPassword');
@@ -77,37 +79,28 @@ export default class TimelineScreen extends Component {
 
   render() {
     return (
-      <Container>
-
-        <Header>
-          <Left />
-          <Body>
-            <Title>Timeline</Title>
-          </Body>
-          <Right />
-        </Header>
-
-        <Timeline
-          data={this.data}
-          circleSize={20}
-          circleColor='rgb(45,156,219)'
-          lineColor='rgb(45,156,219)'
-          timeContainerStyle={{minWidth:52, marginTop: -5}}
-          timeStyle={{textAlign: 'center', backgroundColor:'#FFFFFF', color:'black', padding:5, borderRadius:13}}
-          descriptionStyle={{color:'gray'}}
-          options={{
-            refreshControl: (
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this.onRefresh}
-              />
-            ),
-            renderFooter: this.renderFooter,
-            onEndReached: this.onEndReached,
-            style:{paddingTop:20}
-          }}
-        />
-      </Container>
+      <Timeline
+        data={this.data}
+        circleSize={20}
+        circleColor='rgb(45,156,219)'
+        lineColor='rgb(45,156,219)'
+        timeContainerStyle={{minWidth:52, marginTop: -5}}
+        timeStyle={{textAlign: 'center', backgroundColor:'#FFFFFF', color:'black', padding:5, borderRadius:13}}
+        descriptionStyle={{color:'gray'}}
+        options={{
+          refreshControl: (
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.onRefresh}
+            />
+          ),
+          renderFooter: this.renderFooter,
+          onEndReached: this.onEndReached,
+          style:{paddingTop:20}
+        }}
+      />
     );
   }
 }
+
+export default TimelineScreen;

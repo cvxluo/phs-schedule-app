@@ -5,7 +5,6 @@ import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
 import infoSubmit from './sync';
-import Nav from './Navigator';
 
 {/* ref={input => this.input = input}
 possibily to blur/focus the inputs
@@ -41,7 +40,9 @@ class Login extends Component {
         <FormLabel labelStyle={styles.fLabelText}>Login to get your classes!</FormLabel>
 
         <FormInput
-          autocorrect = {false}
+          autoCorrect = {false}
+          autoCapitalize= 'none'
+          spellCheck= {false}
           placeholder='Powerschool Login'
           inputStyle={{
             maxWidth: '90%',
@@ -50,7 +51,10 @@ class Login extends Component {
         />
 
         <FormInput
-          autocorrect = {false}
+          autoCorrect = {false}
+          autoCapitalize= 'none'
+          spellCheck= {false}
+          secureTextEntry= {true}
           placeholder='Powerschool Password'
           inputStyle={{
             maxWidth: '90%',

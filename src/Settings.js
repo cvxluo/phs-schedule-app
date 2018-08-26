@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StatusBar, StyleSheet, View, Alert } from "react-native";
+import { StatusBar, StyleSheet, View, Alert, Text } from "react-native";
 
 class Settings extends Component {
 
