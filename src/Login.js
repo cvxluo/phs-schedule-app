@@ -4,7 +4,7 @@ import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
-import infoSubmit from './sync';
+import { getSchedule, getLetterDay } from './sync';
 
 {/* ref={input => this.input = input}
 possibily to blur/focus the inputs
@@ -13,25 +13,34 @@ possibily to blur/focus the inputs
 
 class Login extends Component {
 
-  submit(username, password) {
-    const schedule = infoSubmit(username, password);
+  combineDaySchedule(day) {
+    this.setState({ letterDay : day });
+    getSchedule(this.state.username, this.state.password, this.moveToTimeline)
+  }
+
+  moveToTimeline(schedule) {
     this.props.navigation.navigate('Schedule', {
-      username: username,
-      password: password,
+      username: this.state.username,
+      password: this.state.password,
       schedule : schedule,
+      letterDay: this.state.letterDay,
     })
   }
 
+  constructor(props) {
+    super(props);
+    this.combineDaySchedule = this.combineDaySchedule.bind(this);
+    this.moveToTimeline = this.moveToTimeline.bind(this);
 
-  constructor() {
-    super();
     this.state = {
       username: '',
       password: '',
       loading: false,
       schedule: '',
+      letterDay: '',
    };
   }
+
   render() {
     return (
       <View style={styles.form}>
@@ -66,10 +75,20 @@ class Login extends Component {
 
         <Button
           title='Submit'
-          loading= {this.state.loading}
+          loading= { this.state.loading }
+          raised= {true}
+          disabled = { this.state.loading }
+          buttonStyle={{
+            backgroundColor: "rgba(92, 99,216, 1)",
+            width: 300,
+            height: 45,
+            borderColor: "transparent",
+            borderWidth: 0,
+            borderRadius: 5
+          }}
           onPress={() => {
-            this.state.loading = true;
-            this.submit(this.state.username, this.state.password);
+            this.setState({loading : true});
+            getLetterDay(this.state.username, this.state.password, this.combineDaySchedule);
           }}
         />
       </View>
@@ -85,7 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '10%',
+    padding: '5%',
     backgroundColor: '#FFFFFF',
   },
   fLabelText: {

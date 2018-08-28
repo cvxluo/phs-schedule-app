@@ -3,6 +3,8 @@ import { StatusBar, RefreshControl, ActivityIndicator, Text } from "react-native
 import Timeline from 'react-native-timeline-listview'
 import infoSubmit from './sync'
 
+import { getClassOrder, getClassTime } from './hardSchedule.js'
+
 
 class TimelineScreen extends Component {
 
@@ -16,11 +18,38 @@ class TimelineScreen extends Component {
 
     const username = navigation.getParam('username', 'DummyUsername');
     const password = navigation.getParam('password', 'DummyPassword');
-    const schedule = navigation.getParam('schedule', 'DummySchedule');
+    const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
+    const letterDay = navigation.getParam('letterDay', 'A');
+    const order = getClassOrder(letterDay);
 
-    this.data = [
-      {time: '09:00', title: 'Event 1', description: 'Login to get your classes!'},
-    ]
+    this.data = []
+    this.classes = []
+
+    var totalClass = 0;
+    var maxClass = 8;
+
+    for (totalClass = 0; totalClass < maxClassN; totalClass++) {
+      //console.warn(schedule[clas]["Course Name"]);
+      var title = schedule[classN]["Course Name"];
+      var desc = schedule[classN]["Teacher"];
+      classes = classes.concat(title: title, description: desc);
+    }
+
+    var todayClasses = []
+
+    var orderClasses = 0;
+    for (orderClasses = 0; orderClasses < order.length; orderClasses++) {
+      todayClasses = todayClasses.concat(classes[order[orderClasses] - 1]);
+    }
+
+    var data = []
+
+    var todayClass = 0;
+    for (todayClass = 0; todayClass < todayClasses.length; todayClass++) {
+      data = data.concat({time: getClassTime(todayClass + 1), title: todayClasses[todayClass].title, description: todayClasses[todayClass].desc);
+    }
+
+    this.data = data;
 
     this.state = {
       isRefreshing: false,
@@ -42,6 +71,7 @@ class TimelineScreen extends Component {
     }, 10000);
   }
 
+{/*
   onEndReached() {
     if (!this.state.waiting) {
         this.setState({waiting: true});
@@ -67,6 +97,7 @@ class TimelineScreen extends Component {
         }, 2000);
     }
   }
+  */}
 
   renderFooter() {
     if (this.state.waiting) {
