@@ -1,5 +1,8 @@
 
 function getClassOrder(letter) {
+  if (letter == 'No school today') {
+    return [];
+  }
   if (letter == 'A') {
     return [1, 2, 'Morning Break & Announcements', 3, 4, 5, 'Lunch Break', 6, 7, 8];
   }
@@ -28,7 +31,7 @@ function getClassTime(timeslot, letter) {
   if (timeslot == 'Lunch Break' && (letter == 'E' || letter == 'F')) {
     return '11:04 AM - 11:44 AM';
   }
-  else {
+  else if (timeslot == 'Lunch Break' && (letter == 'A' || letter == 'B' || letter == 'C' || letter == 'D')) {
     return '12:23 PM - 12:57 PM';
   }
 
@@ -58,7 +61,7 @@ function getClassTime(timeslot, letter) {
       return '2:37 PM - 3:21 PM';
     }
   }
-  
+
   else {
     if (timeslot == 1) {
       return '8:20 AM - 9:37 AM';

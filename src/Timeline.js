@@ -10,7 +10,7 @@ class TimelineScreen extends Component {
 
   constructor(props){
     super(props)
-    this.onEndReached = this.onEndReached.bind(this)
+    //this.onEndReached = this.onEndReached.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onRefresh = this.onRefresh.bind(this)
 
@@ -19,21 +19,41 @@ class TimelineScreen extends Component {
     const username = navigation.getParam('username', 'DummyUsername');
     const password = navigation.getParam('password', 'DummyPassword');
     const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
-    const letterDay = navigation.getParam('letterDay', 'A');
+    const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
-    this.data = []
-    this.classes = []
 
+    schedule.splice(3, 1);
+
+    this.data = []
+
+    var classes = []
+    var data = []
+
+    var classN = 0;
+    for (classN = 0; classN < order.length; classN++) {
+      if ((typeof order[classN]) == 'number') {
+        data = data.concat({time: getClassTime(classN + 1, letterDay), title: schedule[order[classN] - 1]["Course Name"], description: schedule[order[classN] - 1]["Teacher"]});
+      }
+      else {
+        data = data.concat({time: getClassTime(order[classN], letterDay), title: order[classN], description: ''});
+        order.splice(classN, 1); 
+        classN--;
+      }
+    }
+    this.data = data;
+
+    /*
     var totalClass = 0;
     var maxClass = 8;
 
-    for (totalClass = 0; totalClass < maxClassN; totalClass++) {
+    for (totalClass = 0; totalClass < maxClass; totalClass++) {
       //console.warn(schedule[clas]["Course Name"]);
-      var title = schedule[classN]["Course Name"];
-      var desc = schedule[classN]["Teacher"];
+      var title = schedule[totalClass]["Course Name"];
+      var desc = schedule[totalClass]["Teacher"];
       classes = classes.concat(title: title, description: desc);
     }
+
 
     var todayClasses = []
 
@@ -46,10 +66,11 @@ class TimelineScreen extends Component {
 
     var todayClass = 0;
     for (todayClass = 0; todayClass < todayClasses.length; todayClass++) {
-      data = data.concat({time: getClassTime(todayClass + 1), title: todayClasses[todayClass].title, description: todayClasses[todayClass].desc);
+      data = data.concat({time: getClassTime(todayClass + 1), title: todayClasses[todayClass].title, description: todayClasses[todayClass].desc});
     }
 
     this.data = data;
+    */
 
     this.state = {
       isRefreshing: false,
@@ -71,7 +92,7 @@ class TimelineScreen extends Component {
     }, 10000);
   }
 
-{/*
+/*
   onEndReached() {
     if (!this.state.waiting) {
         this.setState({waiting: true});
@@ -97,7 +118,7 @@ class TimelineScreen extends Component {
         }, 2000);
     }
   }
-  */}
+  */
 
   renderFooter() {
     if (this.state.waiting) {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StatusBar, StyleSheet, View, Alert, Text } from "react-native";
+import { StatusBar, StyleSheet, View, Alert, Text, Linking } from "react-native";
 import { Icon } from 'react-native-elements';
 
 class Settings extends Component {
@@ -20,7 +20,9 @@ class Settings extends Component {
           name='github'
           type='font-awesome'
           color='#000000'
-          onPress={() => Linking.openURL('https://github.com/lincolnmroth/phsapp-API').catch(err => console.error('An error occurred', err));} />
+          onPress={() =>
+            Linking.openURL('https://github.com/lincolnmroth/phsapp-API')
+          } />
       </View>
     );
   }

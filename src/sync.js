@@ -11,7 +11,7 @@ function getLetterDay(user, pass, callback) {
       dbpw: '2f5d8c637f2fc436de714a3370ce5d1e',
     }
   })
-  .then((response) => callback(response))
+  .then((response) => callback(JSON.parse(JSON.stringify(response))["_bodyText"]))
   .catch((error) => {
     console.error(error);
   });
