@@ -4,7 +4,7 @@ import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
-import { getSchedule, getLetterDay } from './sync';
+import { getSchedule, getLetterDay, getMatrix } from './sync';
 
 {/* ref={input => this.input = input}
 possibily to blur/focus the inputs
@@ -15,6 +15,11 @@ class Login extends Component {
 
   combineDaySchedule(day) {
     this.setState({ letterDay : day });
+    getMatrix(this.state.username, this.state.password, this.combineMatrixSchedule)
+  }
+
+  combineMatrixSchedule(matrix) {
+    this.setState({ matrix : matrix });
     getSchedule(this.state.username, this.state.password, this.moveToTimeline)
   }
 
@@ -24,6 +29,7 @@ class Login extends Component {
       password: this.state.password,
       schedule : schedule,
       letterDay: this.state.letterDay,
+      matrix: this.state.matrix,
     })
   }
 
@@ -31,6 +37,8 @@ class Login extends Component {
     super(props);
     this.combineDaySchedule = this.combineDaySchedule.bind(this);
     this.moveToTimeline = this.moveToTimeline.bind(this);
+    this.combineMatrixSchedule = this.combineMatrixSchedule.bind(this);
+
 
     this.state = {
       username: '',
@@ -38,6 +46,7 @@ class Login extends Component {
       loading: false,
       schedule: '',
       letterDay: '',
+      matrix: '',
    };
   }
 

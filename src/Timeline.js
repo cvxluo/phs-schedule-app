@@ -19,11 +19,14 @@ class TimelineScreen extends Component {
     const username = navigation.getParam('username', 'DummyUsername');
     const password = navigation.getParam('password', 'DummyPassword');
     const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
+    const matrix = navigation.getParam('matrix', 'DummyMatrix');
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
 
-    schedule.splice(3, 1);
+    for (i = 0; i < schedule.length; i++) {
+      if (schedule[i]["Course Name"].indexOf('Homeroom') > -1) { schedule.splice(i, 1); }
+    }
 
     this.data = []
 
@@ -37,7 +40,7 @@ class TimelineScreen extends Component {
       }
       else {
         data = data.concat({time: getClassTime(order[classN], letterDay), title: order[classN], description: ''});
-        order.splice(classN, 1); 
+        order.splice(classN, 1);
         classN--;
       }
     }
@@ -136,8 +139,8 @@ class TimelineScreen extends Component {
         circleSize={20}
         circleColor='rgb(45,156,219)'
         lineColor='rgb(45,156,219)'
-        timeContainerStyle={{minWidth:52, marginTop: -5}}
-        timeStyle={{textAlign: 'center', backgroundColor:'#FFFFFF', color:'black', padding:5, borderRadius:13}}
+        timeContainerStyle={{minWidth:150, marginTop: -5}}
+        timeStyle={{textAlign: 'center', backgroundColor: '#008080', color:'white', padding:5, borderRadius:10}}
         descriptionStyle={{color:'gray'}}
         options={{
           refreshControl: (
@@ -148,7 +151,7 @@ class TimelineScreen extends Component {
           ),
           renderFooter: this.renderFooter,
           onEndReached: this.onEndReached,
-          style:{paddingTop:20}
+          style:{paddingTop: 20}
         }}
       />
     );

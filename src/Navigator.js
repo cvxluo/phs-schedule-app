@@ -5,20 +5,18 @@ import Login from './Login';
 import Timeline from './Timeline'
 import Settings from './Settings';
 
-import { createStackNavigator, createBottomTabNavigator, StackNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 const Tabs = createBottomTabNavigator({
   Timeline: { screen: Timeline, },
   Settings: { screen: Settings, }
 })
 
-const Nav = StackNavigator({
-  Login: { screen: Login,
-    navigationOptions: () => ({
-        headerBackTitle: null
-      }),
-    },
-  Schedule: { screen: Tabs, }
+const Navigator = createStackNavigator({
+  Login: { screen: Login, },
+  Schedule: { screen: Tabs, },
 })
+
+const Nav = () => <Navigator persistenceKey={"NavigationState"} />;
 
 export default Nav;
