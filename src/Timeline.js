@@ -19,17 +19,27 @@ class TimelineScreen extends Component {
     const username = navigation.getParam('username', 'DummyUsername');
     const password = navigation.getParam('password', 'DummyPassword');
     const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
-    const matrix = navigation.getParam('matrix', 'DummyMatrix');
+    const matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
     for (i = 0; i < schedule.length; i++) {
-      if (schedule[i]["Course Name"].indexOf('Homeroom') > -1) { schedule.splice(i, 1); }
+      if (schedule[i]["Course Name"].indexOf('Homeroom') > - 1) { schedule.splice(i, 1); }
     }
 
-    for (i = 4; i < 11; i++) {
-      if (matrix[i] == null) { schedule.slice(i - 4, 0, {"Course Name" : "Free Period"}) }
+    var checkFrees = false;
+    for (i = 0; i < schedule.length; i++) {
+      if (!(schedule[i]["Course Name"].indexOf('Free Period') > - 1)) {
+        checkFrees = true;
+      }
     }
+    if (checkFrees) {
+      for (i = 4; i < 12; i++) {
+        if (matrix[1][i] == null) { schedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
+        }
+      }
+    }
+
 
     this.data = []
 
