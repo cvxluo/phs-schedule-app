@@ -24,6 +24,7 @@ class Login extends Component {
   }
 
   moveToTimeline(schedule) {
+    this.setState({ loading : false });
     this.props.navigation.navigate('Schedule', {
       username: this.state.username,
       password: this.state.password,

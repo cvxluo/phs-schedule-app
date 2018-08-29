@@ -23,9 +23,12 @@ class TimelineScreen extends Component {
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
-
     for (i = 0; i < schedule.length; i++) {
       if (schedule[i]["Course Name"].indexOf('Homeroom') > -1) { schedule.splice(i, 1); }
+    }
+
+    for (i = 4; i < 11; i++) {
+      if (matrix[i] == null) { schedule.slice(i - 4, 0, {"Course Name" : "Free Period"}) }
     }
 
     this.data = []
@@ -33,9 +36,8 @@ class TimelineScreen extends Component {
     var classes = []
     var data = []
 
-    var classN = 0;
     for (classN = 0; classN < order.length; classN++) {
-      if ((typeof order[classN]) == 'number') {
+      if ((typeof order[classN]) == 'number' || order[classN] == 'Free Period') {
         data = data.concat({time: getClassTime(classN + 1, letterDay), title: schedule[order[classN] - 1]["Course Name"], description: schedule[order[classN] - 1]["Teacher"]});
       }
       else {
