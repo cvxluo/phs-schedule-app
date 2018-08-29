@@ -37,7 +37,7 @@ class TimelineScreen extends Component {
     var data = []
 
     for (classN = 0; classN < order.length; classN++) {
-      if ((typeof order[classN]) == 'number' || order[classN] == 'Free Period') {
+      if ((typeof order[classN]) == 'number') {
         data = data.concat({time: getClassTime(classN + 1, letterDay), title: schedule[order[classN] - 1]["Course Name"], description: schedule[order[classN] - 1]["Teacher"]});
       }
       else {
