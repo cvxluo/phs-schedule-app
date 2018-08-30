@@ -30,7 +30,13 @@ class TimelineScreen extends Component {
 
     for (i = 4; i < 12; i++) {
       for (j = 0; j < schedule.length; j++) {
-        if (classOrder[i].indexOf(schedule[j]["Course Name"]) > - 1) { orderedSchedule.push(schedule[j]); }
+        if (classOrder[i]) {
+          if (classOrder[i].indexOf(schedule[j]["Course Name"]) > - 1) { orderedSchedule.push(schedule[j]); }
+        }
+        else {
+          orderedSchedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
+          break;
+        }
       }
     }
 
@@ -40,19 +46,6 @@ class TimelineScreen extends Component {
       if (schedule[i]["Enroll"].indexOf('09/05/2018') < 0) { schedule.splice(i, 1); }
     }
     */
-
-    var checkFrees = false;
-    for (i = 0; i < orderedSchedule.length; i++) {
-      if (!(orderedSchedule[i]["Course Name"].indexOf('Free Period') > - 1)) {
-        checkFrees = true;
-      }
-    }
-    if (checkFrees) {
-      for (i = 4; i < 12; i++) {
-        if (matrix[1][i] == null) { orderedSchedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
-        }
-      }
-    }
 
 
     this.data = []
