@@ -24,20 +24,32 @@ class TimelineScreen extends Component {
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
-    for (i = 0; i < schedule.length; i++) {
+    const classOrder = matrix[matrix.length - 1];
+    var orderedSchedule = []
+
+
+    for (i = 4; i < 12; i++) {
+      for (j = 0; j < schedule.length; j++) {
+        if (classOrder[i].indexOf(schedule[j]["Course Name"]) > - 1) { orderedSchedule.push(schedule[j]); }
+      }
+    }
+
+    /*
+    for (i = 0; i < orderedSchedule.length; i++) {
       if (schedule[i]["Course Name"].indexOf('Homeroom') > - 1) { schedule.splice(i, 1); }
       if (schedule[i]["Enroll"].indexOf('09/05/2018') < 0) { schedule.splice(i, 1); }
     }
+    */
 
     var checkFrees = false;
-    for (i = 0; i < schedule.length; i++) {
-      if (!(schedule[i]["Course Name"].indexOf('Free Period') > - 1)) {
+    for (i = 0; i < orderedSchedule.length; i++) {
+      if (!(orderedSchedule[i]["Course Name"].indexOf('Free Period') > - 1)) {
         checkFrees = true;
       }
     }
     if (checkFrees) {
       for (i = 4; i < 12; i++) {
-        if (matrix[1][i] == null) { schedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
+        if (matrix[1][i] == null) { orderedSchedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
         }
       }
     }
@@ -50,7 +62,7 @@ class TimelineScreen extends Component {
 
     for (classN = 0; classN < order.length; classN++) {
       if ((typeof order[classN]) == 'number') {
-        data = data.concat({time: getClassTime(classN + 1, letterDay), title: schedule[order[classN] - 1]["Course Name"], description: schedule[order[classN] - 1]["Teacher"]});
+        data = data.concat({time: getClassTime(classN + 1, letterDay), title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"]});
       }
       else {
         data = data.concat({time: getClassTime(order[classN], letterDay), title: order[classN], description: ''});
@@ -60,40 +72,12 @@ class TimelineScreen extends Component {
     }
     this.data = data;
 
-    /*
-    var totalClass = 0;
-    var maxClass = 8;
-
-    for (totalClass = 0; totalClass < maxClass; totalClass++) {
-      //console.warn(schedule[clas]["Course Name"]);
-      var title = schedule[totalClass]["Course Name"];
-      var desc = schedule[totalClass]["Teacher"];
-      classes = classes.concat(title: title, description: desc);
-    }
-
-
-    var todayClasses = []
-
-    var orderClasses = 0;
-    for (orderClasses = 0; orderClasses < order.length; orderClasses++) {
-      todayClasses = todayClasses.concat(classes[order[orderClasses] - 1]);
-    }
-
-    var data = []
-
-    var todayClass = 0;
-    for (todayClass = 0; todayClass < todayClasses.length; todayClass++) {
-      data = data.concat({time: getClassTime(todayClass + 1), title: todayClasses[todayClass].title, description: todayClasses[todayClass].desc});
-    }
-
-    this.data = data;
-    */
 
     this.state = {
       isRefreshing: false,
       waiting: false,
       data: this.data,
-      schedule: schedule,
+      schedule: orderedSchedule,
     }
   }
 
