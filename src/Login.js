@@ -4,7 +4,7 @@ import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
-import { getSchedule, getLetterDay, getMatrix } from './sync';
+import { getSchedule, getLetterDay, getMatrix, getWeekly } from './sync';
 
 {/* ref={input => this.input = input}
 possibily to blur/focus the inputs
@@ -13,33 +13,34 @@ possibily to blur/focus the inputs
 
 class Login extends Component {
 
-  combineDaySchedule(day) {
-    this.setState({ letterDay : day });
-    getMatrix(this.state.username, this.state.password, this.combineMatrixSchedule)
+
+  handleCalls(type, data) {
+    if(type == 'letter') { this.setState({ letterDay : data }); }
+    if(type == 'matrix') { this.setState({ matrix : data }); }
+    if(type == 'weekly') { this.setState({ weekly : data }); }
+    if(type == 'schedule') { this.setState({ schedule : data }); }
+    this.setState({ retrieved : this.state.retrieved + 1 });
+    if (this.state.retrieved == 4) {
+      this.moveToTimeline();
+    }
   }
 
-  combineMatrixSchedule(matrix) {
-    this.setState({ matrix : matrix });
-    getSchedule(this.state.username, this.state.password, this.moveToTimeline)
-  }
-
-  moveToTimeline(schedule) {
+  moveToTimeline() {
     this.setState({ loading : false });
     this.props.navigation.navigate('Schedule', {
       username: this.state.username,
       password: this.state.password,
-      schedule : schedule,
+      schedule : this.state.schedule,
       letterDay: this.state.letterDay,
       matrix: this.state.matrix,
+      weekly: this.state.weekly,
     })
   }
 
   constructor(props) {
     super(props);
-    this.combineDaySchedule = this.combineDaySchedule.bind(this);
     this.moveToTimeline = this.moveToTimeline.bind(this);
-    this.combineMatrixSchedule = this.combineMatrixSchedule.bind(this);
-
+    this.handleCalls = this.handleCalls.bind(this);
 
     this.state = {
       username: '',
@@ -48,6 +49,8 @@ class Login extends Component {
       schedule: '',
       letterDay: '',
       matrix: '',
+      weekly: '',
+      retrieved: 0,
    };
   }
 
@@ -97,8 +100,14 @@ class Login extends Component {
             borderRadius: 5
           }}
           onPress={() => {
-            this.setState({loading : true});
-            getLetterDay(this.state.username, this.state.password, this.combineDaySchedule);
+            this.setState({
+              loading : true,
+              retrieved : 0,
+            });
+            getLetterDay(this.state.username, this.state.password, this.handleCalls);
+            getMatrix(this.state.username, this.state.password, this.handleCalls);
+            getWeekly(this.state.username, this.state.password, this.handleCalls);
+            getSchedule(this.state.username, this.state.password, this.handleCalls);
           }}
         />
       </View>

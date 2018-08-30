@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StatusBar, RefreshControl, ActivityIndicator, Text } from "react-native";
+import { View, StyleSheet, StatusBar, RefreshControl, ActivityIndicator, Text } from "react-native";
 import Timeline from 'react-native-timeline-listview'
 import infoSubmit from './sync'
 
@@ -20,11 +20,13 @@ class TimelineScreen extends Component {
     const password = navigation.getParam('password', 'DummyPassword');
     const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
     const matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
+    const weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
     const order = getClassOrder(letterDay);
 
     for (i = 0; i < schedule.length; i++) {
       if (schedule[i]["Course Name"].indexOf('Homeroom') > - 1) { schedule.splice(i, 1); }
+      if (schedule[i]["Enroll"].indexOf('09/05/2018') < 0) { schedule.splice(i, 1); }
     }
 
     var checkFrees = false;
@@ -146,28 +148,43 @@ class TimelineScreen extends Component {
 
   render() {
     return (
-      <Timeline
-        data={this.data}
-        circleSize={20}
-        circleColor='rgb(45,156,219)'
-        lineColor='rgb(45,156,219)'
-        timeContainerStyle={{minWidth:150, marginTop: -5}}
-        timeStyle={{textAlign: 'center', backgroundColor: '#008080', color:'white', padding:5, borderRadius:10}}
-        descriptionStyle={{color:'gray'}}
-        options={{
-          refreshControl: (
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.onRefresh}
-            />
-          ),
-          renderFooter: this.renderFooter,
-          onEndReached: this.onEndReached,
-          style:{paddingTop: 20}
-        }}
-      />
+      <View style={styles.container}>
+        <Timeline
+          data={this.data}
+          style={styles.list}
+          circleSize={20}
+          circleColor='rgb(45,156,219)'
+          lineColor='rgb(45,156,219)'
+          timeContainerStyle={{minWidth:150, marginTop: -5}}
+          timeStyle={{textAlign: 'center', backgroundColor: '#008080', color:'white', padding:5, borderRadius:13}}
+          descriptionStyle={{color:'gray'}}
+          options={{
+            refreshControl: (
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this.onRefresh}
+              />
+            ),
+            renderFooter: this.renderFooter,
+            onEndReached: this.onEndReached,
+            style:{paddingTop: 5}
+          }}
+        />
+      </View>
     );
   }
 }
 
 export default TimelineScreen;
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: '5%',
+    backgroundColor:'white'
+  },
+  list: {
+    flex: 1,
+  },
+});
