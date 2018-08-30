@@ -16,23 +16,6 @@ class Settings extends Component {
         <Text style={styles.text}> This app works by logging into Powerschool with your username and password in order to retrieve your classes. The code can be found on GitHub by pressing the button below.</Text>
         <Text style={styles.text}> Created by Lincoln Roth & Charlie Luo </Text>
 
-        <Button
-          title='Log Out'
-          raised= {true}
-          buttonStyle={{
-            backgroundColor: "rgba(187, 184, 252, 1)",
-            width: 300,
-            height: 45,
-            borderColor: "transparent",
-            borderWidth: 0,
-            borderRadius: 5
-          }}
-          containerStyle={styles.button}
-          onPress={() => {
-            this.props.navigation.navigate('Login');
-          }}
-        />
-
 
         <Icon
           reverse
@@ -42,6 +25,25 @@ class Settings extends Component {
           onPress={() =>
             Linking.openURL('https://github.com/lincolnmroth/phsapp-API')
           } />
+
+          <Button
+            title='Log Out'
+            raised= {true}
+            buttonStyle={{
+              backgroundColor: "rgba(187, 184, 252, 1)",
+              width: 300,
+              height: 45,
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 5
+            }}
+            containerStyle={styles.button}
+            onPress={() => {
+              this.props.navigation.navigate('Login');
+            }}
+          />
+
+          
       </View>
     );
   }

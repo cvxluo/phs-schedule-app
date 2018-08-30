@@ -34,8 +34,74 @@ class TimelineScreen extends Component {
           if (classOrder[i].indexOf(schedule[j]["Course Name"]) > - 1) { orderedSchedule.push(schedule[j]); }
         }
         else {
-          orderedSchedule.splice(i - 4, 0, {"Course Name" : "Free Period"});
+          orderedSchedule.splice(i - 4, 0, {
+            "Course Name" : "Free Period",
+            "Exp" : '',
+          });
           break;
+        }
+      }
+    }
+
+    var labDay = ''
+    for (i = 0; i < orderedSchedule.length; i++) {
+      scienceLetters = orderedSchedule[i]["Exp"];
+
+      if (scienceLetters) {
+        // https://stackoverflow.com/questions/4009756/how-to-count-string-occurrence-in-string
+        allowOverlapping = false;
+        for (letter = 65; letter < 73; letter++) {
+          string = scienceLetters;
+          subString = String.fromCharCode(letter);
+          if (subString.length <= 0) return (string.length + 1);
+
+          var n = 0,
+              pos = 0,
+              step = allowOverlapping ? 1 : subString.length;
+
+          while (true) {
+              pos = string.indexOf(subString, pos);
+              if (pos >= 0) {
+                  ++n;
+                  pos += step;
+              } else break;
+          }
+          if (n > 1) {
+            labDay = String.fromCharCode(letter);
+          }
+
+        }
+      }
+    }
+
+
+    var gymFree = '';
+    for (j = 0; j < orderedSchedule.length; j++) {
+      gymLetters = orderedSchedule[j]["Exp"];
+      if (orderedSchedule[j]["Course Name"].indexOf('PE') > -1) {
+        for (letter = 65; letter < 69; letter++) {
+          if (gymLetters.indexOf(String.fromCharCode(letter)) < 0 && String.fromCharCode(letter) != labDay) {
+            gymFree = String.fromCharCode(letter);
+          }
+        }
+      }
+    }
+
+
+    if (letterDay == gymFree) {
+      for (j = 0; j < orderedSchedule.length; j++) {
+        if (orderedSchedule[j]["Course Name"].indexOf('PE') > -1) {
+          orderedSchedule[j]["Course Name"] = "Free Period";
+          orderedSchedule[j]["Teacher"] = "Free Gym";
+        }
+      }
+    }
+
+    if (letterDay == labDay) {
+      for (j = 0; j < orderedSchedule.length; j++) {
+        if (orderedSchedule[j]["Course Name"].indexOf('PE') > -1) {
+          orderedSchedule[j]["Course Name"] = "Lab";
+          orderedSchedule[j]["Teacher"] = '';
         }
       }
     }
@@ -65,13 +131,13 @@ class TimelineScreen extends Component {
     }
     this.data = data;
 
-
     this.state = {
       isRefreshing: false,
       waiting: false,
       data: this.data,
       schedule: orderedSchedule,
     }
+
   }
 
   onRefresh(){

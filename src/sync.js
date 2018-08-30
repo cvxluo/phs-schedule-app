@@ -451,7 +451,6 @@ function getWeekly(user, pass, callback) {
       format: 'weekly'
     }
   })
-  .then((response) => response.json())
   .then((responseJSON) => {
      callback('weekly', JSON.parse(JSON.stringify(responseJSON)));
   })
@@ -472,7 +471,6 @@ function getMatrix(user, pass, callback) {
       format: 'matrix'
     }
   })
-  .then((response) => response.json())
   .then((responseJSON) => {
      callback('matrix', JSON.parse(JSON.stringify(responseJSON)));
   })
@@ -495,7 +493,6 @@ function getSchedule(user, pass, callback) {
       format: 'currentYear'
     }
   })
-  .then((response) => response.json())
   .then((responseJSON) => {
      callback('schedule', JSON.parse(JSON.stringify(responseJSON)));
   })

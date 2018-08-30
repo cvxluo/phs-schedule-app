@@ -19,9 +19,28 @@ class Login extends Component {
     if(type == 'matrix') { this.setState({ matrix : data }); }
     if(type == 'weekly') { this.setState({ weekly : data }); }
     if(type == 'schedule') { this.setState({ schedule : data }); }
-    this.setState({ retrieved : this.state.retrieved + 1 });
-    if (this.state.retrieved == 4) {
-      this.moveToTimeline();
+
+    try {
+      JSON.parse(this.state.matrix);
+      JSON.parse(this.state.weekly);
+      JSON.parse(this.state.schedule);
+
+
+
+      this.setState({ retrieved : this.state.retrieved + 1 });
+    }
+    catch(err) {
+      this.setState({ errorMessage : "Couldn't connect to Powerschool, try again later."});
+      this.setState({
+        retrieved : 0,
+        loading : false,
+      });
+    }
+    finally {
+      if (this.state.retrieved == 4) {
+        this.setState({ retrieved : 0 });
+        this.moveToTimeline();
+      }
     }
   }
 
@@ -51,6 +70,7 @@ class Login extends Component {
       matrix: '',
       weekly: '',
       retrieved: 0,
+      errorMessage: '',
    };
   }
 
@@ -84,7 +104,7 @@ class Login extends Component {
           onChangeText={(text) => this.setState({password : text})}
         />
 
-        {/* <FormValidationMessage>Error message</FormValidationMessage> */}
+        <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
 
         <Button
           title='Submit'
