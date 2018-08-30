@@ -12,7 +12,6 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 const Tabs = createBottomTabNavigator({
   Timeline: { screen: Timeline, },
   Settings: { screen: Settings, }
-  //ClassNow: { screen: ClassNow, },
 },
 {
   navigationOptions: ({ navigation }) => ({
