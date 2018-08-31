@@ -4,43 +4,42 @@ import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
-import { getSchedule, getLetterDay, getMatrix, getWeekly } from './sync';
-
-{/* ref={input => this.input = input}
-possibily to blur/focus the inputs
-*/}
+import getInfo, { getSchedule, getLetterDay, getMatrix, getWeekly } from './sync';
 
 
 class Login extends Component {
 
 
   handleCalls(type, data) {
+    /*
     if(type == 'letter') { this.setState({ letterDay : data }); }
     if(type == 'matrix') { this.setState({ matrix : data }); }
     if(type == 'weekly') { this.setState({ weekly : data }); }
     if(type == 'schedule') { this.setState({ schedule : data }); }
+    */
 
     try {
-      JSON.parse(this.state.matrix);
-      JSON.parse(this.state.weekly);
-      JSON.parse(this.state.schedule);
+      info = JSON.parse(data["_bodyInit"]);
+      schedule = info["CurrentYear"];
+      matrix = info["matrix"];
+      letterDay = info["Letter Day"];
+      weekly = info["weekly"];
 
+      this.setState({
+        schedule : schedule,
+        weekly : weekly,
+        matrix : matrix,
+        letterDay : letterDay,
+      })
 
+      this.moveToTimeline();
 
-      this.setState({ retrieved : this.state.retrieved + 1 });
     }
     catch(err) {
       this.setState({ errorMessage : "Couldn't connect to Powerschool, try again later."});
       this.setState({
-        retrieved : 0,
         loading : false,
       });
-    }
-    finally {
-      if (this.state.retrieved == 4) {
-        this.setState({ retrieved : 0 });
-        this.moveToTimeline();
-      }
     }
   }
 
@@ -69,7 +68,6 @@ class Login extends Component {
       letterDay: '',
       matrix: '',
       weekly: '',
-      retrieved: 0,
       errorMessage: '',
    };
   }
@@ -94,6 +92,7 @@ class Login extends Component {
 
         <FormInput
           autoCorrect = {false}
+          clearTextOnFocus = {true}
           autoCapitalize= 'none'
           spellCheck= {false}
           secureTextEntry= {true}
@@ -122,12 +121,14 @@ class Login extends Component {
           onPress={() => {
             this.setState({
               loading : true,
-              retrieved : 0,
             });
+            /*
             getLetterDay(this.state.username, this.state.password, this.handleCalls);
             getMatrix(this.state.username, this.state.password, this.handleCalls);
             getWeekly(this.state.username, this.state.password, this.handleCalls);
             getSchedule(this.state.username, this.state.password, this.handleCalls);
+            */
+            getInfo(this.state.username, this.state.password, this.handleCalls);
           }}
         />
       </View>

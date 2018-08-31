@@ -501,9 +501,52 @@ function getSchedule(user, pass, callback) {
   });
 }
 
+function getSchedule(user, pass, callback) {
+  fetch('https://phsapp.herokuapp.com/getSchedule', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      username: user,
+      pw: getpw(pass),
+      ldappassword: pass,
+      dbpw: getdbpw(pass),
+      format: 'currentYear'
+    }
+  })
+  .then((responseJSON) => {
+     callback('schedule', JSON.parse(JSON.stringify(responseJSON)));
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
+function getInfo(user, pass, callback) {
+  fetch('http://34.207.167.200:8080/getInfo', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      username: user,
+      pw: getpw(pass),
+      ldappassword: pass,
+      dbpw: getdbpw(pass),
+    }
+  })
+  .then((responseJSON) => {
+     callback('all', JSON.parse(JSON.stringify(responseJSON)));
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
 export {
   getSchedule,
   getLetterDay,
   getMatrix,
   getWeekly,
 };
+
+export default getInfo;

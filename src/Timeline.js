@@ -120,40 +120,49 @@ class TimelineScreen extends Component {
     var data = []
 
     for (classN = 0; classN < order.length; classN++) {
-      var today = new Date();
-      if ((typeof order[classN]) == 'number') {
-        classTime = getClassTime(classN + 1, letterDay);
-        dashIndex = classTime.indexOf('-');
-        dashSplit = [classTime.substring(0, dashIndex - 1), classTime.substring(dashIndex + 2, classTime.length - 1)]
-        hour1 = dashSplit[0].substring(0, dashSplit[0].indexOf(':'));
-        minute1 = dashSplit[0].substring(dashSplit[0].indexOf(':'), dashSplit[0].length - 1);
-        hour2 = dashSplit[1].substring(0, dashSplit[1].indexOf(':'));
-        minute2 = dashSplit[1].substring(dashSplit[1].indexOf(':'), dashSplit[1].length - 1);
+      var today = new Date(2018, 9, 5, 14, 30, 0, 0);
+      classTime = '00:00 AM - 00:00 AM';
+      if ((typeof order[classN]) == 'number') { classTime = getClassTime(classN + 1, letterDay); }
+      else { classTime = getClassTime(order[classN], letterDay); }
 
-        lower = new Date(today.getFullYear(), today.getMonth(), hour1, minute1, 0, 0);
-        upper = new Date(today.getFullYear(), today.getMonth(), hour2, minute2, 0, 0);
+      dashIndex = classTime.indexOf('-');
+      dashSplit = [classTime.substring(0, dashIndex - 1), classTime.substring(dashIndex + 2, classTime.length)]
+      afternoon1 = 0;
+      afternoon2 = 0;
+      if (dashSplit[0].indexOf('PM') > -1) { afternoon1 = 12; }
+      if (dashSplit[1].indexOf('PM') > -1) { afternoon2 = 12; }
+
+      hour1 = parseInt(dashSplit[0].substring(0, dashSplit[0].indexOf(':')));
+      if (hour1 < 12) { hour1 += afternoon1; }
+      minute1 = parseInt(dashSplit[0].substring(dashSplit[0].indexOf(':') + 1, dashSplit[0].indexOf('M') - 1));
+      hour2 = parseInt(dashSplit[1].substring(0, dashSplit[1].indexOf(':')));
+      if (hour2 < 12) { hour2 += afternoon2; }
+      minute2 = parseInt(dashSplit[1].substring(dashSplit[1].indexOf(':') + 1, dashSplit[1].indexOf('M') - 1));
+
+      lower = new Date(today.getFullYear(), today.getMonth(), today.getDay(), hour1, minute1, 0, 0);
+      upper = new Date(today.getFullYear(), today.getMonth(), today.getDay(), hour2, minute2, 0, 0);
+
+
+
+      if ((typeof order[classN]) == 'number') {
         if (lower.valueOf() < today.valueOf() && today.valueOf() < upper.valueOf()) {
-          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"], circleSize : 25, circleColor :'rgb(234, 49, 16)'});
+          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"], circleSize : 25, circleColor :'rgb(234, 49, 16)', dotColor: 'aqua'});
         }
-        data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"]});
+        else {
+          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"]});
+        }
       }
 
 
       else {
         classTime = getClassTime(order[classN], letterDay);
-        dashIndex = classTime.indexOf('-');
-        dashSplit = [classTime.substring(0, dashIndex - 1), classTime.substring(dashIndex + 2, classTime.length - 1)]
-        hour1 = dashSplit[0].substring(0, dashSplit[0].indexOf(':'));
-        minute1 = dashSplit[0].substring(dashSplit[0].indexOf(':'), dashSplit[0].length - 1);
-        hour2 = dashSplit[1].substring(0, dashSplit[1].indexOf(':'));
-        minute2 = dashSplit[1].substring(dashSplit[1].indexOf(':'), dashSplit[1].length - 1);
 
-        lower = new Date(today.getFullYear(), today.getMonth(), hour1, minute1, 0, 0);
-        upper = new Date(today.getFullYear(), today.getMonth(), hour2, minute2, 0, 0);
         if (lower.valueOf() < today.valueOf() && today.valueOf() < upper.valueOf()) {
           data = data.concat({time: classTime, title: order[classN], description: '', circleSize : 25, circleColor : 'rgb(234, 49, 16)'});
         }
-        data = data.concat({time: classTime, title: order[classN], description: ''});
+        else {
+          data = data.concat({time: classTime, title: order[classN], description: ''});
+        }
         order.splice(classN, 1);
         classN--;
       }
@@ -178,7 +187,7 @@ class TimelineScreen extends Component {
         data: this.data,
         isRefreshing: false
       });
-    }, 10000);
+    }, 2);
   }
 
 /*
@@ -230,6 +239,7 @@ class TimelineScreen extends Component {
           timeContainerStyle={{minWidth:150, marginTop: -5}}
           timeStyle={{textAlign: 'center', backgroundColor: '#008080', color:'white', padding:5, borderRadius:13}}
           descriptionStyle={{color:'gray'}}
+          innerCircle={'dot'}
           options={{
             refreshControl: (
               <RefreshControl

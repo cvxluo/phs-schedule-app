@@ -50,6 +50,6 @@ const Navigator = createStackNavigator({
   }
 })
 
-const Nav = () => <Navigator persistenceKey={"NavigationState"} />;
+const Nav = () => <Navigator/>;
 
 export default Nav;
