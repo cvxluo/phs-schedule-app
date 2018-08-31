@@ -133,7 +133,7 @@ class TimelineScreen extends Component {
         lower = new Date(today.getFullYear(), today.getMonth(), hour1, minute1, 0, 0);
         upper = new Date(today.getFullYear(), today.getMonth(), hour2, minute2, 0, 0);
         if (lower.valueOf() < today.valueOf() && today.valueOf() < upper.valueOf()) {
-          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"], circleSize={25}, circleColor='rgb(234, 49, 16)'});
+          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"], circleSize : 25, circleColor :'rgb(234, 49, 16)'});
         }
         data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"]});
       }
@@ -151,7 +151,7 @@ class TimelineScreen extends Component {
         lower = new Date(today.getFullYear(), today.getMonth(), hour1, minute1, 0, 0);
         upper = new Date(today.getFullYear(), today.getMonth(), hour2, minute2, 0, 0);
         if (lower.valueOf() < today.valueOf() && today.valueOf() < upper.valueOf()) {
-          data = data.concat({time: classTime, title: order[classN], description: '', circleSize={25}, circleColor='rgb(234, 49, 16)'});
+          data = data.concat({time: classTime, title: order[classN], description: '', circleSize : 25, circleColor : 'rgb(234, 49, 16)'});
         }
         data = data.concat({time: classTime, title: order[classN], description: ''});
         order.splice(classN, 1);
