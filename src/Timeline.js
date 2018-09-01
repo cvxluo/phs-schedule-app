@@ -24,47 +24,10 @@ class TimelineScreen extends Component {
      }
   }
 
-
-  constructor(props){
-    super(props)
-    //this.onEndReached = this.onEndReached.bind(this)
-    this.renderFooter = this.renderFooter.bind(this)
-    this.onRefresh = this.onRefresh.bind(this)
-    this._retrieveData = this._retrieveData.bind(this)
-
-    const { navigation } = this.props;
-
-    this.username = '';
-    this.password = '';
-    this.schedule = '';
-    this.matrix = '';
-    this.weekly = '';
-    this.letterDay = '';
-
-    try {
-      this.username = navigation.getParam('username', 'DummyUsername');
-      this.password = navigation.getParam('password', 'DummyPassword');
-      this.schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
-      this.matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
-      this.weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
-      this.letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
-    }
-    catch (err) {
-      this._retrieveData();
-    }
-
-    const username = this.username;
-    const password = this.password;
-    const schedule = this.schedule;
-    const matrix = this.matrix;
-    const weekly = this.weekly;
-    const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
-
+  createTimeline(username, password, schedule, matrix, weekly, letterDay) {
     const order = getClassOrder(letterDay);
-
     const classOrder = matrix[matrix.length - 1];
     var orderedSchedule = []
-
 
     for (i = 4; i < 12; i++) {
       for (j = 0; j < schedule.length; j++) {
@@ -206,12 +169,58 @@ class TimelineScreen extends Component {
       }
     }
     this.data = data;
+  }
+
+
+  constructor(props){
+    super(props)
+    //this.onEndReached = this.onEndReached.bind(this)
+    this.renderFooter = this.renderFooter.bind(this)
+    this.onRefresh = this.onRefresh.bind(this)
+    this._retrieveData = this._retrieveData.bind(this)
+    this.createTimeline = this.createTimeline.bind(this)
+
+    const { navigation } = this.props;
+
+    this.username = '';
+    this.password = '';
+    this.schedule = '';
+    this.matrix = '';
+    this.weekly = '';
+    this.letterDay = '';
+
+    try {
+      this.username = navigation.getParam('username', 'DummyUsername');
+      this.password = navigation.getParam('password', 'DummyPassword');
+      this.schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
+      this.matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
+      this.weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
+      this.letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
+    }
+    catch (err) {
+      this._retrieveData();
+    }
+
+    const username = this.username;
+    const password = this.password;
+    const schedule = this.schedule;
+    const matrix = this.matrix;
+    const weekly = this.weekly;
+    const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
+
+    this.createTimeline(username, password, schedule, matrix, weekly, letterDay);
 
     this.state = {
       isRefreshing: false,
       waiting: false,
       data: this.data,
-      schedule: orderedSchedule,
+      schedule: schedule,
+      username: username,
+      password: password,
+      schedule: schedule,
+      matrix: matrix,
+      weekly: weekly,
+      letterDay: letterDay,
     }
 
   }
@@ -219,11 +228,12 @@ class TimelineScreen extends Component {
   onRefresh(){
     this.setState({isRefreshing: true});
     setTimeout(() => {
+      this.createTimeline(this.state.username, this.state.password, this.state.schedule, this.state.matrix, this.state.weekly, this.state.letterDay);
       this.setState({
         data: this.data,
         isRefreshing: false
       });
-    }, 2);
+    }, 6000);
   }
 
 /*
