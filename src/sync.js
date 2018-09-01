@@ -404,7 +404,7 @@ function doAdminLogin(form) {
 }
 
 function getdbpw(originalpw){
-  console.log("PSKEY" + pskey);
+
   var b64pw = b64_md5(originalpw);
   var hmac_md5pw = hex_hmac_md5(pskey, b64pw)
   pw= hmac_md5pw;
@@ -412,7 +412,6 @@ function getdbpw(originalpw){
   return dbpw;
 }
 function getpw(originalpw){
-  console.log("PSKEY" + pskey);
   var b64pw = b64_md5(originalpw);
   var hmac_md5pw = hex_hmac_md5(pskey, b64pw)
   pw= hmac_md5pw;
@@ -523,7 +522,7 @@ function getSchedule(user, pass, callback) {
 }
 
 function getInfo(user, pass, callback) {
-  fetch('http://34.207.167.200:8080/getInfo', {
+  fetch('http://34.207.167.200/getInfo', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
