@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TabNavigator } from 'react-navigation';
+import { ActivityIndicator } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -50,6 +51,9 @@ const Navigator = createStackNavigator({
   }
 })
 
-const Nav = () => <Navigator/>;
+const Nav = () => <Navigator
+  persistenceKey = {"NavigationState"}
+  renderLoadingExperimental={() => <ActivityIndicator />}
+  />;
 
 export default Nav;

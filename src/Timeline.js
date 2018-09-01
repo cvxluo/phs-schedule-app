@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, StatusBar, RefreshControl, ActivityIndicator, Text } from "react-native";
+import { View, StyleSheet, StatusBar, RefreshControl, ActivityIndicator, Text, AsyncStorage } from "react-native";
 import Timeline from 'react-native-timeline-listview'
 import infoSubmit from './sync'
 
@@ -8,20 +8,58 @@ import { getClassOrder, getClassTime } from './hardSchedule.js'
 
 class TimelineScreen extends Component {
 
+  _retrieveData = async () => {
+    try {
+      const response = await AsyncStorage.multiGet(['username', 'password', 'schedule', 'matrix', 'weekly', 'letterDay'])
+        for (i = 0; i < 6; i++) {
+          if (response[i][0] == 'username') { this.username = response[i][1]; }
+          if (response[i][0] == 'password') { this.password = response[i][1]; }
+          if (response[i][0] == 'schedule') { this.schedule = response[i][1]; }
+          if (response[i][0] == 'matrix') { this.matrix = response[i][1]; }
+          if (response[i][0] == 'weekly') { this.weekly = response[i][1]; }
+          if (response[i][0] == 'letterDay') { this.letterDay = response[i][1]; }
+        }
+     } catch (error) {
+       this.props.navigation.navigate('Login');
+     }
+  }
+
+
   constructor(props){
     super(props)
     //this.onEndReached = this.onEndReached.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onRefresh = this.onRefresh.bind(this)
+    this._retrieveData = this._retrieveData.bind(this)
 
     const { navigation } = this.props;
 
-    const username = navigation.getParam('username', 'DummyUsername');
-    const password = navigation.getParam('password', 'DummyPassword');
-    const schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
-    const matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
-    const weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
+    this.username = '';
+    this.password = '';
+    this.schedule = '';
+    this.matrix = '';
+    this.weekly = '';
+    this.letterDay = '';
+
+    try {
+      this.username = navigation.getParam('username', 'DummyUsername');
+      this.password = navigation.getParam('password', 'DummyPassword');
+      this.schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
+      this.matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
+      this.weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
+      this.letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
+    }
+    catch (err) {
+      this._retrieveData();
+    }
+
+    const username = this.username;
+    const password = this.password;
+    const schedule = this.schedule;
+    const matrix = this.matrix;
+    const weekly = this.weekly;
     const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
+
     const order = getClassOrder(letterDay);
 
     const classOrder = matrix[matrix.length - 1];
@@ -180,9 +218,7 @@ class TimelineScreen extends Component {
 
   onRefresh(){
     this.setState({isRefreshing: true});
-    //refresh to initial data
     setTimeout(() => {
-      //refresh to initial data
       this.setState({
         data: this.data,
         isRefreshing: false
@@ -237,7 +273,7 @@ class TimelineScreen extends Component {
           circleColor='rgb(45,156,219)'
           lineColor='rgb(45,156,219)'
           timeContainerStyle={{minWidth:150, marginTop: -5}}
-          timeStyle={{textAlign: 'center', backgroundColor: '#008080', color:'white', padding:5, borderRadius:13}}
+          timeStyle={{textAlign: 'center', backgroundColor: 'rgb(42, 76, 130)', color:'white', padding:5, borderRadius:13}}
           descriptionStyle={{color:'gray'}}
           innerCircle={'dot'}
           options={{
@@ -248,7 +284,7 @@ class TimelineScreen extends Component {
               />
             ),
             renderFooter: this.renderFooter,
-            onEndReached: this.onEndReached,
+            //onEndReached: this.onEndReached,
             style:{paddingTop: 5}
           }}
         />

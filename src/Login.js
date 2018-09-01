@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, AsyncStorage} from 'react-native';
 
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
 
@@ -8,6 +8,21 @@ import getInfo, { getSchedule, getLetterDay, getMatrix, getWeekly } from './sync
 
 
 class Login extends Component {
+
+  _storeData = async () => {
+    try {
+      await AsyncStorage.multiSet([
+        ['schedule', JSON.stringify(this.state.schedule)],
+        ['weekly', JSON.stringify(this.state.weekly)],
+        ['letterDay', this.state.letterDay],
+        ['matrix', JSON.stringify(this.state.matrix)],
+        ['username', this.state.username],
+        ['password', this.state.password],
+      ]);;
+    } catch (error) {
+      this.setState({ errorMessage : "Couldn't store your data. Please try again later."})
+    }
+  }
 
 
   handleCalls(type, data) {
@@ -31,6 +46,8 @@ class Login extends Component {
         matrix : matrix,
         letterDay : letterDay,
       })
+
+      this._storeData();
 
       this.moveToTimeline();
 
@@ -59,6 +76,7 @@ class Login extends Component {
     super(props);
     this.moveToTimeline = this.moveToTimeline.bind(this);
     this.handleCalls = this.handleCalls.bind(this);
+    this._storeData = this._storeData.bind(this);
 
     this.state = {
       username: '',
