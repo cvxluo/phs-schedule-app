@@ -32,6 +32,7 @@ class Settings extends Component {
         />
 
         <Text style={styles.text}> This app works by logging into Powerschool with your username and password in order to retrieve your classes. The code can be found on GitHub by pressing the button below.</Text>
+        <Text style={styles.text}> The red dot shows which class you should be in now. Refresh (by pulling up) to update the timeline to the current class you should be in.</Text>
         <Text style={styles.credit}> Created by Lincoln Roth & Charlie Luo </Text>
 
 
@@ -41,7 +42,7 @@ class Settings extends Component {
           type='font-awesome'
           color='#000000'
           onPress={() =>
-            Linking.openURL('https://github.com/lincolnmroth/phsapp-API')
+            Linking.openURL('https://github.com/cvxluo/phs-schedule-app')
           } />
       </View>
     );

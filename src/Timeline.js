@@ -35,9 +35,11 @@ class TimelineScreen extends Component {
           if (classOrder[i].indexOf(schedule[j]["Course Name"]) > - 1) { orderedSchedule.push(schedule[j]); }
         }
         else {
-          orderedSchedule.splice(i - 4, 0, {
+          orderedSchedule.push({
             "Course Name" : "Free Period",
             "Exp" : '',
+            "Teacher" : '',
+            "Room" : '',
           });
           break;
         }
@@ -92,8 +94,8 @@ class TimelineScreen extends Component {
     if (letterDay == gymFree) {
       for (j = 0; j < orderedSchedule.length; j++) {
         if (orderedSchedule[j]["Course Name"].indexOf('PE') > -1) {
-          orderedSchedule[j]["Course Name"] = "Free Period";
-          orderedSchedule[j]["Teacher"] = "Free Gym";
+          //orderedSchedule[j]["Course Name"] = "Free Period";
+          orderedSchedule[j]["Teacher"] = "Free Period today";
         }
       }
     }
@@ -121,7 +123,7 @@ class TimelineScreen extends Component {
     var data = []
 
     for (classN = 0; classN < order.length; classN++) {
-      var today = new Date(2018, 9, 5, 14, 30, 0, 0);
+      var today = new Date();
       classTime = '00:00 AM - 00:00 AM';
       if ((typeof order[classN]) == 'number') { classTime = getClassTime(classN + 1, letterDay); }
       else { classTime = getClassTime(order[classN], letterDay); }
@@ -140,17 +142,15 @@ class TimelineScreen extends Component {
       if (hour2 < 12) { hour2 += afternoon2; }
       minute2 = parseInt(dashSplit[1].substring(dashSplit[1].indexOf(':') + 1, dashSplit[1].indexOf('M') - 1));
 
-      lower = new Date(today.getFullYear(), today.getMonth(), today.getDay(), hour1, minute1, 0, 0);
-      upper = new Date(today.getFullYear(), today.getMonth(), today.getDay(), hour2, minute2, 0, 0);
-
-
+      lower = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hour1, minute1, 0, 0);
+      upper = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hour2, minute2, 0, 0);
 
       if ((typeof order[classN]) == 'number') {
         if (lower.valueOf() < today.valueOf() && today.valueOf() < upper.valueOf()) {
-          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"], circleSize : 25, circleColor :'rgb(234, 49, 16)', dotColor: 'aqua'});
+          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: (orderedSchedule[order[classN] - 1]["Teacher"] + " \n" + orderedSchedule[order[classN] - 1]["Room"]), circleSize : 25, circleColor :'rgb(234, 49, 16)', dotColor: 'aqua'});
         }
         else {
-          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: orderedSchedule[order[classN] - 1]["Teacher"]});
+          data = data.concat({time: classTime, title: orderedSchedule[order[classN] - 1]["Course Name"], description: (orderedSchedule[order[classN] - 1]["Teacher"] + " \n" + orderedSchedule[order[classN] - 1]["Room"])});
         }
       }
 
@@ -189,13 +189,14 @@ class TimelineScreen extends Component {
     this.weekly = '';
     this.letterDay = '';
 
+
     try {
       this.username = navigation.getParam('username', 'DummyUsername');
       this.password = navigation.getParam('password', 'DummyPassword');
       this.schedule = JSON.parse(navigation.getParam('schedule', 'DummySchedule'));
       this.matrix = JSON.parse(navigation.getParam('matrix', 'DummyMatrix'));
       this.weekly = JSON.parse(navigation.getParam('weekly', 'DummyWeekly'));
-      this.letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
+      this.letterDay = navigation.getParam('letterDay', 'A');
     }
     catch (err) {
       this._retrieveData();
@@ -206,22 +207,25 @@ class TimelineScreen extends Component {
     const schedule = this.schedule;
     const matrix = this.matrix;
     const weekly = this.weekly;
-    const letterDay = 'A'; // temporary code- use this for real: navigation.getParam('letterDay', 'No School Today');
-
-    this.createTimeline(username, password, schedule, matrix, weekly, letterDay);
+    if (this.letterDay == "No school today") {
+      this.letterDay = 'A';
+    }
+    const letterDay = this.letterDay;
 
     this.state = {
       isRefreshing: false,
       waiting: false,
       data: this.data,
-      schedule: schedule,
       username: username,
       password: password,
-      schedule: schedule,
+      schedule: this.schedule,
       matrix: matrix,
       weekly: weekly,
       letterDay: letterDay,
     }
+
+
+    this.createTimeline(username, password, schedule, matrix, weekly, letterDay);
 
   }
 
@@ -233,7 +237,7 @@ class TimelineScreen extends Component {
         data: this.data,
         isRefreshing: false
       });
-    }, 6000);
+    }, 2000);
   }
 
 /*

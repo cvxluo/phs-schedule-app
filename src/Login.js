@@ -95,7 +95,7 @@ class Login extends Component {
       <View style={styles.form}>
         <Image source={require('../assets/princeton_logo.jpg')} />
 
-        <FormLabel labelStyle={styles.fLabelText}>Login to get your classes!</FormLabel>
+        <FormLabel labelStyle={styles.fLabelText}>Log in to get your classes!</FormLabel>
 
         <FormInput
           autoCorrect = {false}
